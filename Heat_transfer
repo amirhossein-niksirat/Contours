@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+L = 1.0  # Length of the rod
+T = 1.0  # Total time
+alpha = 0.01  # Thermal diffusivity
+N = 10  # Number of grid points
+M = 100  # Number of time steps
+dx = L / (N - 1)
+dt = T / M
+
+# Initialize the temperature array
+T = np.zeros((N, M))
+T[:, 0] = 100.0  # Initial condition
+
+# Finite difference method to solve the heat transfer equation
+for j in range(M - 1):
+    for i in range(1, N - 1):
+        T[i, j + 1] = T[i, j] + alpha * dt / dx**2 * (T[i + 1, j] - 2 * T[i, j] + T[i - 1, j])
+
+# Plotting the results
+x = np.linspace(0, L, N)
+t = np.linspace(0, T, M)
+X, T = np.meshgrid(t, x)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(X, T, T.T, cmap='coolwarm')
+ax.set_xlabel('Time')
+ax.set_ylabel('Position')
+ax.set_zlabel('Temperature')
+ax.set_title('Heat Transfer')
+
+plt.show()
